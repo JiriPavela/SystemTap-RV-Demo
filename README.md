@@ -44,11 +44,26 @@ and 2 hello world examples.
 Task priority checking
 ----------------------
 
-WIP: C++ skeleton of e.g., a Mars rover that has limited resources (antenna, communicator, camera, etc.,)
+Simple C++ skeleton of a Mars rover that has limited resources (antenna, communicator, camera, etc.,)
 and various tasks that request the resources with different priorities. Show that proper instrumentation
 (and monitor) can check that the resources are allocated according to the priorities (or not)!
-* Show that ST can be used on C++ too.
-* Show how to redirect output to a file in case the monitor is much more complicated. 
+
+### The checked properties:
+1. A Task with higher priority should always get the requested resource from any other Task with lower
+priority. Task with lower or equal priority than the Task currently assigned to a Resource should wait 
+until the resource is made available. 
+
+### Steps
+1. resource_allocation.stp: run on `resource_allocation`.
+* Note the USDT probe `AVAILABLE_FALSE`.
+* Also note the different ways of specifying C++ function names.
+
+### Used commands
+* To stdout: `sudo stap resource_allocation.stp -c "./resource_allocation"`
+* To output file: `sudo stap resource_allocation.stp -c "./resource_allocation" -o output.log`
+
+### Additional commands
+* Show how to list USDT locations: e.g., `stap -L 'process("resource_allocation").mark("*")'`.
 
 
 Additional (and used) resources

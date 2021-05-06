@@ -1,0 +1,38 @@
+probe process("./resource_allocation").function("Rover") {
+    printf("Rover Created\n")
+}
+
+probe process("./resource_allocation").function("~Rover") {
+    printf("Rover Destroyed\n")
+}
+
+
+probe process("./resource_allocation").mark("AVAILABLE_FALSE")?
+{
+    printf("Update Task: Conflicting Task found\n");
+}
+
+
+probe process("./resource_allocation").function("new_task") {
+    printf("New Task %d (%d): required resource %d\n", $t->id, $t->priority, $t->required_resource)
+}
+
+
+probe process("./resource_allocation").function("allocate_res") {
+    printf("Task %d (%d): allocates resource %d\n", $this->id, $this->priority, $this->required_resource)
+}
+
+probe process("./resource_allocation").function("yield_res") {
+    printf("Task %d (%d): yields resource %d\n", $this->id, $this->priority, $this->required_resource)
+}
+
+
+probe process("./resource_allocation").function("Resource::allocate") {
+    printf("Resource %d: allocated by a Task %d\n", $this->id, $task_id)
+}
+
+
+probe process("./resource_allocation").function("yield@sources/resource_allocation.cpp:27") {
+    if ($this->allocated_task != -1)
+        printf("Resource %d: yielded by a Task %d\n", $this->id, $this->allocated_task)
+}
