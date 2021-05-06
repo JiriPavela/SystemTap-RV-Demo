@@ -1,0 +1,19 @@
+global resources = 0
+
+
+probe process("./simple_resources3").function("prepare") {
+    resources++
+    printf("Resources: %p allocated in: %s\n", $res, probefunc())
+}
+
+probe process("./simple_resources3").function("cleanup") {
+    resources--
+    printf("Resources: %p freed in: %s\n", $res, probefunc())
+}
+
+probe process("./simple_resources3").end {
+    if (resources)
+        printf("Failed: All resources not freed!\n")
+    else
+        printf("Ok: All resources correctly freed!\n")
+}

@@ -1,0 +1,29 @@
+global resources
+global hits
+
+
+probe process("./simple_resources4").function("prepare") {
+    hits[probefunc()]++
+    resources[$res] = hits[probefunc()]
+}
+
+probe process("./simple_resources4").function("cleanup") {
+    hits[probefunc()]++
+    if ([$res] in resources)
+        delete resources[$res]
+    else
+        printf("Attempting to clean up uninitialized Resource: %p in %d. %s call\n", $res, hits[probefunc()], probefunc())
+}
+
+probe process("./simple_resources4").end {
+    dangling = 0
+    foreach (res_addr in resources) {
+        dangling++
+        printf("Resource %p allocated in %d. prepare call was not freed\n", res_addr, resources[res_addr])
+    }
+        
+    if (dangling != 0)
+        printf("Failed: All resources not freed!\n")
+    else
+        printf("Ok: All resources correctly freed!\n")
+}

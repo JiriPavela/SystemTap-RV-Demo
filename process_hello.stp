@@ -1,0 +1,15 @@
+probe begin {
+    printf("HELLO WORLD\n")
+}
+
+probe end {
+    printf("BYE WORLD\n")
+}
+
+probe process("./simple_resources").begin {
+    printf("%s: %s (%d)\n", ctime(gettimeofday_s()), execname(), pid())
+}
+
+probe process("./simple_resources").end {
+    printf("%s: %s (%d)\n", ctime(gettimeofday_s()), execname(), pid())
+}
