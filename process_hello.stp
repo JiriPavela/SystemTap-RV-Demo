@@ -6,10 +6,10 @@ probe end {
     printf("BYE WORLD\n")
 }
 
-probe process("./simple_resources").begin {
+probe process("./simple_resources1").begin {
     printf("%s: %s (%d)\n", ctime(gettimeofday_s()), execname(), pid())
 }
 
-probe process("./simple_resources").end {
+probe process("./simple_resources1").end {
     printf("%s: %s (%d)\n", ctime(gettimeofday_s()), execname(), pid())
 }

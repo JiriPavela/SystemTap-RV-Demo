@@ -30,9 +30,10 @@ probe syscall.open.return, syscall.openat.return
     if (pid()==target()) {
         filename = files_open_attempt[pid()]
         delete files_open_attempt[pid()]
-        if ($return >= 0) {
-            files_opened[pid(), $return] = filename
-            printf("%s -- %s -- successfully opened: %s (%d)\n", ctime(gettimeofday_s()), execname(), filename, $return)
+        retval = strtol(retstr, 10)
+        if (retval >= 0) {
+            files_opened[pid(), retval] = filename
+            printf("%s -- %s -- successfully opened: %s (%d)\n", ctime(gettimeofday_s()), execname(), filename, retval)
         } else {
             printf("%s -- %s -- failed to open: %s\n", ctime(gettimeofday_s()), execname(), filename)
         }
@@ -51,7 +52,8 @@ probe syscall.close.return
     if (pid()==target()) {
         fd = files_close_attempt[pid()]
         delete files_close_attempt[pid()]
-        if ($return != -1) {
+        retval = strtol(retstr, 10)
+        if (retval != -1) {
             printf("%s -- %s -- successfully closed: %s (%d)\n", ctime(gettimeofday_s()), execname(), files_opened[pid(), fd], fd)
             delete files_opened[pid(), fd]
         } else {

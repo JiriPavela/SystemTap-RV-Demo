@@ -43,7 +43,7 @@ int prepare(Resources *res, char *file_name) {
 
 int main(int argc, char *argv[]) {
     if (argc != 3) {
-        printf("Usage: %s FILE1 FILE1\n", argv[0]);
+        printf("Usage: %s FILE1 FILE2\n", argv[0]);
         return 1;
     }
 
